@@ -14,6 +14,12 @@ server::server(asio::io_service &io_service):
 
 void server::run(const std::string &address, const std::string &port)
 {
+    asio::ip::tcp::endpoint endpoint(asio::ip::address::from_string(address),
+                                     static_cast<unsigned short>(std::stoul(port)));
+
+    acceptor.open(endpoint.protocol());
+    acceptor.bind(endpoint);
+    accept_connection();
 }
 
 
