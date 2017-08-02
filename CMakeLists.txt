@@ -20,12 +20,25 @@ if (NOT MSVC)
     add_compile_options(-std=c++14)
 endif()
 
+
 add_library(scgicxx
         src/include/server.hpp
         src/server.cpp
-        )
+        src/include/detail/detail.hpp
+        src/include/detail/array_view.hpp
+        src/include/detail/string_view.hpp
+        src/include/scgi_protocol_parser.hpp
+        src/scgi_protocol_parser.cpp
+        src/detail/detail.cpp
+        src/include/http_request.hpp
+        src/http_request.cpp
+        src/include/http_response.hpp)
 
 target_include_directories(scgicxx PUBLIC ${ASIO_PATH})
+
+if (MSVC)
+    target_compile_definitions(scgicxx PUBLIC -D_WIN32_WINNT=0x0601)
+endif()
 
 
 if (WITH_EXAMPLES)
@@ -34,6 +47,10 @@ if (WITH_EXAMPLES)
 endif()
 
 
+if (WITH_TESTS)
+    enable_testing()
+    add_subdirectory(src/test)
+endif()
 
 # Installation
 
