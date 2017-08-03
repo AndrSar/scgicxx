@@ -1,6 +1,7 @@
 #pragma once
 
 #include "detail/string_view.hpp"
+#include "http_request.hpp"
 #include <cstddef>
 #include <vector>
 
@@ -29,18 +30,17 @@ public:
     }
 
     bool parse(array_view_type buffer);
+    http_request get_http_request() const;
 
 private:
     bool parse_headers(const array_view_type);
     bool locate_content(array_view_type);
 
 private:
-    std::size_t content_length;
-    //array_view_type actual_buffer_view;
-    string_view headers_netstring;
-    array_view_type content;
     state_enum state;
-    //std::vector<array_view_type> headers_tokens;
+    std::size_t content_length;
+    string_view headers_netstring;
+    http_request request;
 };
 
 }

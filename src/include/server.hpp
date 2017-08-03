@@ -18,6 +18,7 @@
 #include <list>
 #include <array>
 #include <functional>
+#include <chrono>
 
 
 namespace scgicxx
@@ -25,6 +26,7 @@ namespace scgicxx
 
 class server
 {
+    using self = server;
 public:
     using handler_function_type = std::function<http_response(const http_request&)>;
     using socket_type = asio::ip::tcp::socket;
@@ -34,10 +36,12 @@ public:
         explicit connection(socket_type &&socket);
 
         socket_type socket;
-        std::array<const char, 2048UL> buffer;
+        std::array<char, 2048UL> buffer;
         std::size_t bytes_received;
         asio::steady_timer data_timeout_timer;
         detail::scgi_protocol_parser stream_parser;
+        std::chrono::system_clock::time_point connection_init_time;
+        std::chrono::microseconds processing_time;
     };
 
 public:
@@ -46,9 +50,19 @@ public:
              const unsigned short port_number,
              handler_function_type handler_function);
 
+    void stop();
+
+    server(const self &another) = delete;
+    server(self &&another) = delete;
+    self &operator=(const self &another) = delete;
+    self &operator=(self &&another) = delete;
+    ~server() = default;
+
 private:
     void accept_connection();
     void async_read_data(connection &conn);
+    void process_request(connection &conn, const http_request &req);
+    void close_connection(connection &conn);
     void launch_dead_connections_collection();
     void remove_dead_connections();
 

@@ -32,7 +32,10 @@ add_library(scgicxx
         src/detail/detail.cpp
         src/include/http_request.hpp
         src/http_request.cpp
-        src/include/http_response.hpp)
+        src/include/http_response.hpp
+        src/http_response.cpp
+        src/include/server_pool.hpp
+        src/server_pool.cpp)
 
 target_include_directories(scgicxx PUBLIC ${ASIO_PATH})
 

@@ -1,14 +1,16 @@
-#include "../include/server.hpp"
+#include "../include/server_pool.hpp"
+
+#include <iostream>
 
 
 int main(int argn, const char *args[])
 {
-    asio::io_service io_service;
+    auto requests_handler = [](const scgicxx::http_request &request) {
+        return scgicxx::http_response::ok("text/plain", "Hello!");
+    };
 
-    scgicxx::server server(io_service);
-    server.run("127.0.0.1", 9000);
-
-    io_service.run();
+    scgicxx::server_pool server_pool(1, "127.0.0.1", 9000, requests_handler);
+    server_pool.run();
 
     return 0;
 }

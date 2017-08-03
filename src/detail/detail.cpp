@@ -26,32 +26,5 @@ const string_view parse_net_string(const array_view<const char> data)
     return result;
 }
 
-
-//const array_view<char> find(const array_view<char> haystack, const char * needle)
-//{
-//    array_view<char> result;
-//
-//    std::size_t j = 0;
-//    for (std::size_t i = 0; i < haystack.size(); ++i)
-//    {
-//        if (haystack[i] == needle[j])
-//        {
-//            if (needle[j + 1] == '\0')
-//            {
-//                result = {haystack.data() + (i - j), j + 1};
-//                break;
-//            }
-//
-//            ++j;
-//        }
-//        else
-//        {
-//            j = 0;
-//        }
-//    }
-//
-//    return result;
-//}
-
 }
 }
