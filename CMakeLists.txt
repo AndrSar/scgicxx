@@ -35,7 +35,17 @@ add_library(scgicxx
         src/include/http_response.hpp
         src/http_response.cpp
         src/include/server_pool.hpp
-        src/server_pool.cpp)
+        src/server_pool.cpp
+        src/include/logging/logger.hpp
+        src/logging/logger.cpp
+        src/include/logging/abstract_logger.hpp
+        src/logging/abstract_logger.cpp
+        src/include/logging/console_logger.hpp
+        src/logging/console_logger.cpp
+        src/include/logging/message.hpp
+        src/logging/message.cpp
+        src/include/logging/level_enum.hpp
+        )
 
 target_include_directories(scgicxx PUBLIC ${ASIO_PATH})
 

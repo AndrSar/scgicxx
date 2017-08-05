@@ -7,16 +7,25 @@
 
 #include "include/server_pool.hpp"
 
+#include <thread>
 #include <iostream>
 
 
 namespace scgicxx
 {
 
+server_pool::server_pool(const std::shared_ptr<logging::logger> &logger):
+        logger(logger)
+{
+}
+
+
 server_pool::server_pool(const std::size_t n,
                          const std::string &address,
                          const unsigned short initial_port_number,
-                         handler_function_type requests_handler_function)
+                         handler_function_type requests_handler_function,
+                         const std::shared_ptr<logging::logger> &logger):
+        logger(logger)
 {
     unsigned short port_number = initial_port_number;
     std::size_t amount = n;
@@ -39,6 +48,8 @@ void server_pool::add_server(const std::string &address,
 
 void server_pool::run()
 {
+    logger->log_info("server_pool", "starting...");
+
     asio::io_service io_service;
     asio::signal_set signals(io_service, SIGINT, SIGTERM);
 
@@ -58,12 +69,12 @@ void server_pool::run()
         auto s = std::make_shared<server>(io_service);
         servers.push_back(s);
 
-        threads.emplace_back([&io_service, s, info](){
+        std::thread thread([&io_service, s, info](){
             s->run(info.address, info.port_number, info.requests_handler_function);
             io_service.run();
         });
 
-        threads.back().detach();
+        thread.detach();
     }
 
     while(!io_service.stopped())

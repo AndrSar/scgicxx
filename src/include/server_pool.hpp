@@ -9,7 +9,6 @@
 
 #include "server.hpp"
 #include <cstddef>
-#include <thread>
 #include <vector>
 #include <memory>
 
@@ -31,12 +30,13 @@ public:
     };
 
 public:
-    server_pool() = default;
+    explicit server_pool(const std::shared_ptr<logging::logger> &logger);
 
     server_pool(const std::size_t n,
                 const std::string &address,
                 const unsigned short initial_port_number,
-                handler_function_type requests_handler_function);
+                handler_function_type requests_handler_function,
+                const std::shared_ptr<logging::logger> &logger);
 
 
     void add_server(const std::string &address,
@@ -55,9 +55,10 @@ private:
     void stop();
 
 private:
-    std::vector<std::thread> threads;
+    //std::vector<std::thread> threads;
     std::vector<server_info> servers_info;
     std::vector<std::shared_ptr<server>> servers;
+    std::shared_ptr<logging::logger> logger;
 };
 
 }
